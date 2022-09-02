@@ -27,6 +27,12 @@ static std::optional<std::vector<std::byte>> ReadFile(const std::string &path)
     return std::move(contents);
 }
 
+bool IsInputValid(float value) {
+    if (value >= 0.0 && value <= 100.0) return true;
+    
+    return false;
+}
+
 int main(int argc, const char **argv)
 {    
     std::string osm_data_file = "";
