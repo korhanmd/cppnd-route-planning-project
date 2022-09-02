@@ -63,17 +63,33 @@ int main(int argc, const char **argv)
     // RoutePlanner object below in place of 10, 10, 90, 90.
     float start_x, start_y, end_x, end_y;
 
-    std::cout << "Enter x coordinate of the starting point: ";
-    std::cin >> start_x;
+    // Use to check if input is valid
+    bool validation_flag = false;
 
-    std::cout << "Enter y coordinate of the starting point: ";
-    std::cin >> start_y;
+    // Get input from user
+    do {
+        std::cout << "Enter x coordinate of the starting point: ";
+        std::cin >> start_x;
+        validation_flag = IsInputValid(start_x);
+    } while (validation_flag == false);
 
-    std::cout << "Enter x coordinate of the ending point: ";
-    std::cin >> end_x;
+    do {
+        std::cout << "Enter y coordinate of the starting point: ";
+        std::cin >> start_y;
+        validation_flag = IsInputValid(start_y);
+    } while (validation_flag == false);
 
-    std::cout << "Enter y coordinate of the ending point: ";
-    std::cin >> end_y;
+    do {
+        std::cout << "Enter x coordinate of the ending point: ";
+        std::cin >> end_x;
+        validation_flag = IsInputValid(end_x);
+    } while (validation_flag == false);
+
+    do {
+        std::cout << "Enter y coordinate of the ending point: ";
+        std::cin >> end_y;
+        validation_flag = IsInputValid(end_y);
+    } while (validation_flag == false);
 
     // Build Model.
     RouteModel model{osm_data};
