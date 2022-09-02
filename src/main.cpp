@@ -30,6 +30,7 @@ static std::optional<std::vector<std::byte>> ReadFile(const std::string &path)
 bool IsInputValid(float value) {
     if (value >= 0.0 && value <= 100.0) return true;
     
+    std::cout << "Input is not valid. It must be between 0.0 and 100.0.\n";
     return false;
 }
 
