@@ -8,17 +8,16 @@ RoutePlanner::RoutePlanner(RouteModel &model, float start_x, float start_y, floa
     end_x *= 0.01;
     end_y *= 0.01;
 
-    // Use the m_Model.FindClosestNode method to find the closest nodes to the starting and ending coordinates.
     // Store the nodes in the RoutePlanner's start_node and end_node attributes.
-    this->start_node = &this->m_Model.FindClosestNode(start_x, start_y);
-    this->end_node = &this->m_Model.FindClosestNode(end_x, end_y);
+    start_node = &m_Model.FindClosestNode(start_x, start_y);
+    end_node = &m_Model.FindClosestNode(end_x, end_y);
 }
 
 
 // Calculate the heuristic value of the node
 
 float RoutePlanner::CalculateHValue(RouteModel::Node const *node) {
-    return node->distance(*this->end_node);
+    return node->distance(*end_node);
 }
 
 
@@ -29,9 +28,9 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
 
     for (RouteModel::Node * neighbor : current_node->neighbors) {
         neighbor->parent = current_node;
-        neighbor->h_value = this->CalculateHValue(neighbor);
+        neighbor->h_value = CalculateHValue(neighbor);
         neighbor->g_value = current_node->g_value + neighbor->distance(*current_node);
-        this->open_list.push_back(neighbor);
+        open_list.push_back(neighbor);
         neighbor->visited = true;
     }
 }
@@ -44,10 +43,10 @@ bool Compare(RouteModel::Node *first, RouteModel::Node *second) {
 }
 
 RouteModel::Node *RoutePlanner::NextNode() {
-    std::sort(this->open_list.begin(), this->open_list.end(), Compare);
+    std::sort(open_list.begin(), open_list.end(), Compare);
 
-    RouteModel::Node *next_node = this->open_list.back();
-    this->open_list.pop_back();
+    RouteModel::Node *next_node = open_list.back();
+    open_list.pop_back();
 
     return next_node;
 }
@@ -85,17 +84,17 @@ void RoutePlanner::AStarSearch() {
 
     // Start with starting node
     start_node->visited = true;
-    this->AddNeighbors(start_node);
+    AddNeighbors(start_node);
 
     // Iterate over the neighbors to find the path
     while (open_list.size() > 0) {
         current_node = NextNode();
 
-        if (current_node == this->end_node) {
-            this->m_Model.path = ConstructFinalPath(current_node);
+        if (current_node == end_node) {
+            m_Model.path = ConstructFinalPath(current_node);
             return;
         }
 
-        this->AddNeighbors(current_node);
+        AddNeighbors(current_node);
     }
 }
