@@ -59,42 +59,32 @@ int main(int argc, const char **argv)
             osm_data = std::move(*data);
     }
     
-    // Declare floats `start_x`, `start_y`, `end_x`, and `end_y`
-    float start_x, start_y, end_x, end_y;
+    // Declare float array to hold `start_x`, `start_y`, `end_x`, and `end_y`
+    float coordinates[4];
 
     // Use to check if input is valid
-    bool validation_flag = false;
+    bool validation_flag;
+
+    // Use to print correct message to user
+    std::string axes[] {"x", "y"};
+    std::string points[] {"starting", "ending"};
 
     // Get input from user
-    do {
-        std::cout << "Enter x coordinate of the starting point: ";
-        std::cin >> start_x;
-        validation_flag = IsInputValid(start_x);
-    } while (validation_flag == false);
+    for (int i = 0; i < 4; i++) {
+        validation_flag = false;
 
-    do {
-        std::cout << "Enter y coordinate of the starting point: ";
-        std::cin >> start_y;
-        validation_flag = IsInputValid(start_y);
-    } while (validation_flag == false);
-
-    do {
-        std::cout << "Enter x coordinate of the ending point: ";
-        std::cin >> end_x;
-        validation_flag = IsInputValid(end_x);
-    } while (validation_flag == false);
-
-    do {
-        std::cout << "Enter y coordinate of the ending point: ";
-        std::cin >> end_y;
-        validation_flag = IsInputValid(end_y);
-    } while (validation_flag == false);
+        do {
+            std::cout << "Enter " << axes[i%2] << " coordinate of the " << points[i/2] << " point: ";
+            std::cin >> coordinates[i];
+            validation_flag = IsInputValid(coordinates[i]);
+        } while (validation_flag == false);
+    }
 
     // Build Model.
     RouteModel model{osm_data};
 
     // Create RoutePlanner object and perform A* search.
-    RoutePlanner route_planner{model, start_x, start_y, end_x, end_y};
+    RoutePlanner route_planner{model, coordinates[0], coordinates[1], coordinates[2], coordinates[3]};
     route_planner.AStarSearch();
 
     std::cout << "Distance: " << route_planner.GetDistance() << " meters. \n";
